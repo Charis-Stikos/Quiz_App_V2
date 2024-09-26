@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.quizappv2.databinding.FragmentQuizBinding
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 
 class QuizFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
@@ -142,7 +143,6 @@ class QuizFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -160,26 +160,66 @@ class QuizFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     private fun displayQuestion() {
-        if (currentQuestionIndex < questions.size) {
+        if (currentQuestionIndex < questions.size) {  // Bounds check
             binding.questionText.text = questions[currentQuestionIndex]
             binding.option1Button.text = options[currentQuestionIndex][0]
             binding.option2Button.text = options[currentQuestionIndex][1]
             binding.option3Button.text = options[currentQuestionIndex][2]
             binding.option4Button.text = options[currentQuestionIndex][3]
+        } else {
+            showFinalScore()
         }
     }
 
     private fun checkAnswer(selectedAnswerIndex: Int) {
+        disableOptions()
+
         if (selectedAnswerIndex == correctAnswers[currentQuestionIndex]) {
+            getSelectedButton(selectedAnswerIndex)?.setBackgroundColor(resources.getColor(android.R.color.holo_green_light, null))
             score++
+        } else {
+            getSelectedButton(selectedAnswerIndex)?.setBackgroundColor(resources.getColor(android.R.color.holo_red_light, null))
+            getSelectedButton(correctAnswers[currentQuestionIndex])?.setBackgroundColor(resources.getColor(android.R.color.holo_green_light, null))
         }
 
-        currentQuestionIndex++
-        if (currentQuestionIndex < questions.size) {
-            displayQuestion()
-        } else {
-            showFinalScore()
+        binding.root.postDelayed({
+            currentQuestionIndex++
+            if (currentQuestionIndex < questions.size) {
+                resetOptionButtons()
+                displayQuestion()
+            } else {
+                showFinalScore()
+            }
+        }, 1500)
+    }
+
+    private fun getSelectedButton(index: Int): MaterialButton? {
+        return when (index) {
+            0 -> binding.option1Button
+            1 -> binding.option2Button
+            2 -> binding.option3Button
+            3 -> binding.option4Button
+            else -> null
         }
+    }
+
+    private fun disableOptions() {
+        binding.option1Button.isEnabled = false
+        binding.option2Button.isEnabled = false
+        binding.option3Button.isEnabled = false
+        binding.option4Button.isEnabled = false
+    }
+
+    private fun resetOptionButtons() {
+        binding.option1Button.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.option2Button.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.option3Button.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.option4Button.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+
+        binding.option1Button.isEnabled = true
+        binding.option2Button.isEnabled = true
+        binding.option3Button.isEnabled = true
+        binding.option4Button.isEnabled = true
     }
 
     private fun showFinalScore() {
@@ -193,26 +233,14 @@ class QuizFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private fun restartQuiz() {
         currentQuestionIndex = 0
         score = 0
-        binding.option1Button.isEnabled = true
-        binding.option2Button.isEnabled = true
-        binding.option3Button.isEnabled = true
-        binding.option4Button.isEnabled = true
+        resetOptionButtons()
         displayQuestion()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_quiz -> {
-                Toast.makeText(context, "Quiz", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_features -> {
-                Toast.makeText(context, "Χαρακτηριστικά", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_process -> {
-                Toast.makeText(context, "Διαδικασία", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_help -> {
-                Toast.makeText(context, "Βοήθεια", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Quiz Selected", Toast.LENGTH_SHORT).show()
             }
         }
         return true
