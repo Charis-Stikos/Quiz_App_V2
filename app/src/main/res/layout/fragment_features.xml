@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FeaturesFragment">
-    <!-- TODO: Update blank fragment layout -->
+    android:padding="16dp"
+    android:background="@color/white">
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_process_info"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Features Fragment"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"
-        android:textColor="@color/lavender"/>
-</RelativeLayout>
+        android:textSize="18sp"
+        android:lineSpacingExtra="10dp"
+        android:textColor="@android:color/black"
+        android:padding="16dp"
+        android:text="@string/tiganelaio_process"
+        android:gravity="start"
+        android:textStyle="normal"
+        android:justificationMode="inter_word"
+        android:background="@drawable/text_background"
+        android:layout_marginTop="40dp"
+        />
+</ScrollView>

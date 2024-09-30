@@ -223,19 +223,26 @@ class QuizFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     private fun showFinalScore() {
-        binding.questionText.text = "Your score is $score out of ${questions.size}."
-        binding.option1Button.isEnabled = false
-        binding.option2Button.isEnabled = false
-        binding.option3Button.isEnabled = false
-        binding.option4Button.isEnabled = false
+        binding.questionText.text = "Απάντησες σωστά $score από ${questions.size}."
+        binding.option1Button.visibility = View.GONE
+        binding.option2Button.visibility = View.GONE
+        binding.option3Button.visibility = View.GONE
+        binding.option4Button.visibility = View.GONE
     }
 
     private fun restartQuiz() {
         currentQuestionIndex = 0
         score = 0
+        binding.option1Button.visibility = View.VISIBLE
+        binding.option2Button.visibility = View.VISIBLE
+        binding.option3Button.visibility = View.VISIBLE
+        binding.option4Button.visibility = View.VISIBLE
+
         resetOptionButtons()
+
         displayQuestion()
     }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
